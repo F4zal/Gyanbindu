@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduBatches — Premium Learning</title>
+<style>
+/* ══════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --p1:#6c3ef4;
+  --p2:#8b5cf6;
+  --p3:#a78bfa;
+  --p-light:#f3eeff;
+  --p-glow:rgba(108,62,244,0.18);
+  --accent:#f97316;
+  --green:#10b981;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+  --sky:#0ea5e9;
+  --ink:#0f0c1a;
+  --ink2:#1e1b2e;
+  --ink3:#2d2847;
+  --muted:#64607a;
+  --muted2:#a09cba;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(108,62,244,0.15);
+  --glass:rgba(255,255,255,0.04);
+  --glass2:rgba(255,255,255,0.07);
+  --white:#ffffff;
+  --surface:#18152b;
+  --surface2:#201d35;
+  --surface3:#26223e;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 2px 12px rgba(0,0,0,0.25),0 1px 3px rgba(0,0,0,0.18);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.4);
+  --shadow-glow:0 0 24px rgba(108,62,244,0.25);
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--ink);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;border:none;outline:none;font-family:inherit;}
+img{display:block;}
+input{font-family:inherit;outline:none;border:none;background:none;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--p2);border-radius:4px;}
+
+/* ══ Animations ══ */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ripple{0%{transform:scale(0);opacity:1}100%{transform:scale(4);opacity:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes dotsTravel{
+  0%  {left:66px;width:8px; height:8px; opacity:.3;background:#555;}
+  25% {left:46px;width:14px;height:14px;opacity:1; background:var(--p1);}
+  50% {left:27px;width:14px;height:14px;opacity:1; background:var(--p1);}
+  75% {left:10px;width:11px;height:11px;opacity:.6;background:var(--p2);}
+  100%{left:0;   width:7px; height:7px; opacity:0; background:#555;}
+}
+.dots-loader{position:relative;width:75px;height:20px;}
+.dots-loader div{position:absolute;border-radius:50%;top:50%;transform:translateY(-50%);animation:dotsTravel 2s ease-in-out infinite;}
+.dots-loader div:nth-child(1){animation-delay:-2s}
+.dots-loader div:nth-child(2){animation-delay:-1.34s}
+.dots-loader div:nth-child(3){animation-delay:-0.68s}
+.loader-center{display:flex;justify-content:center;align-items:center;padding:64px 0;}
+.page-enter{animation:fadeSlideUp 0.3s ease both;}
+
+/* ══ Background Orbs ══ */
+body::before{
+  content:'';position:fixed;top:-200px;right:-200px;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(108,62,244,0.12) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;bottom:-150px;left:-150px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.08) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* ══ Pages ══ */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+.header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(15,12,26,0.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;padding:0 18px;max-width:1280px;margin:0 auto;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-logo{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--p1),var(--p2));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 12px var(--p-glow);
+}
+.brand-name{
+  font-size:1.1rem;font-weight:800;letter-spacing:-0.5px;
+  background:linear-gradient(90deg,var(--white),var(--p3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.brand-tag{
+  font-size:0.6rem;font-weight:700;letter-spacing:1px;
+  color:var(--p3);background:var(--p-glow);
+  padding:2px 6px;border-radius:4px;border:1px solid var(--border2);
+  margin-left:2px;
+}
+.header-actions{display:flex;align-items:center;gap:8px;}
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--glass2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted2);transition:all 0.2s;
+}
+.icon-btn:hover{background:var(--p-glow);color:var(--white);border-color:var(--border2);}
+.header-search-row{
+  display:flex;align-items:center;gap:8px;width:100%;
+}
+.header-search-input{
+  flex:1;background:var(--glass2);border:1px solid var(--border);
+  border-radius:10px;padding:9px 16px;
+  font-size:0.875rem;color:var(--white);
+}
+.header-search-input::placeholder{color:var(--muted);}
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  color:var(--p3);font-size:0.825rem;font-weight:600;
+  padding:6px 12px;border-radius:8px;
+  background:var(--p-glow);border:1px solid var(--border2);
+  transition:all 0.2s;
+}
+.back-btn:hover{background:rgba(108,62,244,0.25);}
+.batch-header-title{
+  font-size:0.78rem;font-weight:600;color:var(--muted2);
+  max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0a0718 0%,#13073a 40%,#1a0d4a 70%,#0f0c1a 100%);
+  padding:48px 20px 56px;
+}
+.hero-mesh{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% -10%,rgba(108,62,244,0.3) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 10% 80%,rgba(249,115,22,0.1) 0%,transparent 60%);
+}
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;opacity:0.04;
+  background-image:linear-gradient(var(--border2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border2) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.hero-content{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(108,62,244,0.15);border:1px solid rgba(108,62,244,0.3);
+  color:var(--p3);padding:5px 12px;border-radius:20px;
+  font-size:0.72rem;font-weight:700;letter-spacing:0.8px;
+  margin-bottom:14px;
+}
+.hero-eyebrow-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--p2);animation:pulse 1.5s infinite;
+}
+.hero-title{
+  font-size:clamp(1.75rem,5vw,3rem);font-weight:900;
+  line-height:1.1;margin-bottom:12px;
+  background:linear-gradient(135deg,#fff 0%,var(--p3) 60%,var(--p2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:-1px;
+}
+.hero-subtitle{font-size:0.95rem;color:var(--muted2);max-width:500px;line-height:1.6;}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:24px;padding:12px 24px;border-radius:12px;
+  background:linear-gradient(135deg,var(--p1),var(--p2));
+  color:white;font-weight:700;font-size:0.9rem;
+  box-shadow:0 4px 20px var(--p-glow);transition:all 0.2s;
+}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--p-glow);}
+.hero-stats{
+  display:flex;gap:32px;margin-top:32px;padding-top:28px;
+  border-top:1px solid var(--border);
+}
+.hero-stat{}
+.hero-stat-num{
+  font-size:1.5rem;font-weight:900;
+  background:linear-gradient(135deg,var(--white),var(--p3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-stat-label{font-size:0.7rem;color:var(--muted);margin-top:3px;letter-spacing:0.5px;text-transform:uppercase;}
+
+/* ══════════════════════════════════════════
+   CONTAINER / SECTION
+══════════════════════════════════════════ */
+.container{max-width:1280px;margin:0 auto;padding:0 18px;}
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:28px 0 18px;
+}
+.section-title{
+  display:flex;align-items:center;gap:10px;
+  font-size:1.05rem;font-weight:800;color:var(--white);
+}
+.section-pill{
+  width:4px;height:20px;border-radius:2px;
+  background:linear-gradient(180deg,var(--p1),var(--p2));
+}
+.section-count{
+  font-size:0.72rem;color:var(--muted2);
+  background:var(--glass2);border:1px solid var(--border);
+  padding:3px 10px;border-radius:20px;
+}
+
+/* ══ Filter Chips ══ */
+.filter-row{
+  display:flex;gap:8px;overflow-x:auto;
+  padding-bottom:4px;margin-bottom:20px;scrollbar-width:none;
+}
+.filter-row::-webkit-scrollbar{display:none;}
+.chip{
+  flex-shrink:0;padding:7px 16px;border-radius:10px;
+  font-size:0.8rem;font-weight:600;cursor:pointer;
+  background:var(--glass2);border:1px solid var(--border);
+  color:var(--muted2);transition:all 0.2s;
+}
+.chip.active{
+  background:linear-gradient(135deg,var(--p1),var(--p2));
+  color:white;border-color:transparent;
+  box-shadow:0 2px 12px var(--p-glow);
+}
+.chip:hover:not(.active){border-color:var(--border2);color:var(--p3);}
+
+/* ══════════════════════════════════════════
+   COURSE CARD
+══════════════════════════════════════════ */
+.courses-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:18px;padding-bottom:40px;
+}
+.course-card{
+  background:var(--surface2);border-radius:var(--radius);
+  border:1px solid var(--border);overflow:hidden;
+  cursor:pointer;display:flex;flex-direction:column;
+  transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s;
+  position:relative;
+}
+.course-card::before{
+  content:'';position:absolute;inset:0;border-radius:var(--radius);
+  background:linear-gradient(135deg,transparent 60%,rgba(108,62,244,0.06));
+  pointer-events:none;
+}
+.course-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg),var(--shadow-glow);
+  border-color:var(--border2);
+}
+.course-card-thumb{position:relative;padding:10px 10px 0;}
+.course-card-img{
+  width:100%;aspect-ratio:16/9;object-fit:cover;
+  border-radius:10px;background:var(--surface3);
+}
+.course-card-overlay{
+  position:absolute;inset:10px 10px 0;border-radius:10px;
+  background:linear-gradient(to bottom,transparent 50%,rgba(15,12,26,0.7));
+  pointer-events:none;
+}
+.course-card-badges{
+  position:absolute;top:18px;left:18px;right:18px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:6px;
+  font-size:0.67rem;font-weight:700;color:white;
+  backdrop-filter:blur(8px);
+}
+.badge-live{background:rgba(239,68,68,0.9);}
+.badge-live .dot{width:5px;height:5px;border-radius:50%;background:white;animation:pulse 1.2s infinite;}
+.badge-enrolled{background:rgba(16,185,129,0.9);}
+.badge-inactive{background:rgba(100,96,122,0.9);}
+.badge-recorded{background:rgba(14,165,233,0.9);}
+.badge-completed{background:rgba(100,96,122,0.9);}
+.badge-upcoming{background:rgba(245,158,11,0.9);}
+.badge-primary{background:rgba(108,62,244,0.9);}
+.badge-green{background:rgba(16,185,129,0.9);}
+
+.course-card-body{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column;}
+.course-card-title{
+  font-size:0.92rem;font-weight:700;color:var(--white);
+  line-height:1.4;flex:1;
+}
+.course-card-desc{
+  font-size:0.73rem;color:var(--muted);margin-top:5px;
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+}
+.course-card-price{display:flex;align-items:baseline;gap:6px;margin-top:10px;}
+.price-current{font-size:1.05rem;font-weight:800;color:var(--white);}
+.price-original{font-size:0.78rem;color:var(--muted);text-decoration:line-through;}
+.price-discount{
+  font-size:0.68rem;font-weight:700;color:var(--green);
+  background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);
+  padding:2px 6px;border-radius:6px;
+}
+.course-card-meta{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.course-meta-tag{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:0.67rem;color:var(--muted2);
+  background:var(--glass2);border:1px solid var(--border);
+  padding:2px 7px;border-radius:5px;
+}
+.course-card-divider{
+  height:1px;background:var(--border);margin:12px 0 0;
+}
+.course-card-actions{display:flex;gap:8px;margin-top:12px;}
+
+/* ══ Buttons ══ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 16px;border-radius:10px;font-size:0.82rem;font-weight:700;
+  transition:all 0.18s;flex:1;position:relative;overflow:hidden;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--p1),var(--p2));
+  color:white;box-shadow:0 2px 10px var(--p-glow);
+}
+.btn-primary:hover{box-shadow:0 4px 20px var(--p-glow);filter:brightness(1.1);}
+.btn-outline{
+  background:var(--glass2);color:var(--p3);
+  border:1px solid var(--border2);
+}
+.btn-outline:hover{background:var(--p-glow);}
+.btn-danger{
+  background:rgba(239,68,68,0.1);color:var(--red);
+  border:1px solid rgba(239,68,68,0.2);
+}
+.btn-danger:hover{background:rgba(239,68,68,0.2);}
+.btn-sm{padding:6px 10px;font-size:0.76rem;flex:unset;}
+.btn-ghost{
+  background:transparent;color:var(--muted2);
+  padding:6px 10px;font-size:0.82rem;flex:unset;
+}
+.btn-ghost:hover{background:var(--glass2);color:var(--white);}
+.btn-live{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:white;box-shadow:0 2px 10px rgba(239,68,68,0.3);
+}
+.btn-live:hover{box-shadow:0 4px 20px rgba(239,68,68,0.4);}
+.btn-disabled{
+  background:var(--glass2);color:var(--muted);
+  cursor:not-allowed;border:1px solid var(--border);
+}
+.btn-icon{
+  width:32px;height:32px;padding:0;flex:0 0 32px;border-radius:8px;
+  background:var(--glass2);color:var(--muted2);border:1px solid var(--border);
+}
+.btn-icon:hover{background:var(--p-glow);color:var(--p3);border-color:var(--border2);}
+
+/* ══ Empty / Error ══ */
+.empty-state,.error-state{
+  display:flex;flex-direction:column;align-items:center;
+  padding:60px 20px;gap:12px;text-align:center;
+}
+.empty-icon{font-size:2.5rem;opacity:0.4;}
+.error-state p{color:var(--red);font-size:0.9rem;}
+.empty-state h3{font-size:1rem;font-weight:700;color:var(--white);}
+.empty-state p{color:var(--muted2);font-size:0.85rem;}
+
+/* ══════════════════════════════════════════
+   BATCH DETAIL HERO
+══════════════════════════════════════════ */
+.batch-hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#080519 0%,#1a0d4a 60%,#0f0c1a 100%);
+  padding:24px 18px 32px;
+}
+.batch-hero-mesh{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(108,62,244,0.35) 0%,transparent 60%);
+}
+.batch-hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.batch-hero-thumb{
+  width:100%;max-width:540px;aspect-ratio:16/9;
+  object-fit:cover;border-radius:14px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 0 1px var(--border);
+  margin-bottom:20px;
+}
+.batch-hero-title{
+  font-size:clamp(1.25rem,3vw,1.875rem);font-weight:900;
+  color:white;line-height:1.2;margin-bottom:10px;letter-spacing:-0.5px;
+}
+.batch-hero-price{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.batch-price-big{
+  font-size:1.6rem;font-weight:900;
+  background:linear-gradient(90deg,white,var(--p3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.batch-price-orig{font-size:0.9rem;color:rgba(255,255,255,0.4);text-decoration:line-through;}
+
+/* ══ Tabs ══ */
+.tabs-nav{
+  display:flex;overflow-x:auto;scrollbar-width:none;
+  background:rgba(15,12,26,0.9);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:60px;z-index:100;
+}
+.tabs-nav::-webkit-scrollbar{display:none;}
+.tab-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:14px 20px;white-space:nowrap;
+  font-size:0.82rem;font-weight:600;color:var(--muted2);
+  border-bottom:2px solid transparent;transition:all 0.18s;
+  background:transparent;flex-shrink:0;
+}
+.tab-btn:hover{color:var(--p3);background:var(--p-glow);}
+.tab-btn.active{color:var(--p3);border-bottom-color:var(--p1);}
+
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeSlideUp 0.22s ease both;}
+.tab-content{padding:22px 0;}
+
+/* ══ Topic Card ══ */
+.topic-card{
+  background:var(--surface2);border-radius:12px;
+  border:1px solid var(--border);padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all 0.2s;margin-bottom:10px;
+}
+.topic-card:hover{
+  border-color:var(--border2);background:var(--surface3);
+  transform:translateX(4px);box-shadow:var(--shadow-glow);
+}
+.topic-icon{
+  width:46px;height:46px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.topic-icon-video{background:rgba(108,62,244,0.15);border:1px solid rgba(108,62,244,0.2);}
+.topic-icon-notes{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);}
+.topic-info{flex:1;}
+.topic-name{font-size:0.9rem;font-weight:700;color:var(--white);}
+.topic-sub{font-size:0.73rem;color:var(--muted2);margin-top:3px;}
+.topic-arrow{
+  width:28px;height:28px;border-radius:7px;
+  background:var(--glass2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted2);flex-shrink:0;
+}
+
+/* ══ Class Card ══ */
+.class-card{
+  background:var(--surface2);border-radius:12px;
+  border:1px solid var(--border);overflow:hidden;
+  margin-bottom:12px;transition:border-color 0.2s;
+}
+.class-card:hover{border-color:var(--border2);}
+.class-card-head{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  background:var(--surface3);display:flex;align-items:flex-start;gap:10px;
+}
+.class-icon{
+  width:42px;height:42px;border-radius:10px;
+  background:rgba(108,62,244,0.15);border:1px solid rgba(108,62,244,0.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.class-title{font-size:0.875rem;font-weight:700;color:var(--white);line-height:1.35;}
+.class-teacher{font-size:0.72rem;color:var(--muted2);margin-top:3px;}
+.class-time{
+  display:flex;align-items:center;gap:4px;
+  font-size:0.68rem;color:var(--muted);margin-top:3px;
+}
+.class-card-tabs{
+  display:flex;border-bottom:1px solid var(--border);
+  background:var(--surface2);
+}
+.class-tab-btn{
+  flex:1;padding:9px 0;font-size:0.77rem;font-weight:600;
+  color:var(--muted2);border-bottom:2px solid transparent;
+  transition:all 0.15s;background:transparent;
+}
+.class-tab-btn.active{color:var(--p3);border-bottom-color:var(--p1);}
+.class-tab-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.class-tab-panel{display:none;padding:14px 16px;}
+.class-tab-panel.active{display:block;}
+
+/* ══ Overview ══ */
+.overview-section{margin-bottom:28px;}
+.overview-section h3{
+  font-size:0.95rem;font-weight:800;color:var(--white);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;
+}
+.overview-section ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.overview-section ul li{
+  font-size:0.84rem;color:var(--muted2);padding:10px 14px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;display:flex;align-items:flex-start;gap:10px;
+  transition:border-color 0.2s;
+}
+.overview-section ul li:hover{border-color:var(--border2);}
+.li-icon{
+  width:18px;height:18px;border-radius:5px;flex-shrink:0;
+  background:rgba(108,62,244,0.15);border:1px solid rgba(108,62,244,0.2);
+  display:flex;align-items:center;justify-content:center;
+  margin-top:1px;
+}
+
+/* ══ Faculty ══ */
+.faculty-card{
+  background:var(--surface2);border-radius:14px;
+  border:1px solid var(--border);padding:20px;
+  display:flex;gap:16px;align-items:flex-start;
+  transition:border-color 0.2s;
+}
+.faculty-card:hover{border-color:var(--border2);}
+.faculty-img{
+  width:72px;height:72px;border-radius:12px;object-fit:cover;
+  border:2px solid var(--border2);flex-shrink:0;
+}
+.faculty-name{font-size:1rem;font-weight:800;color:var(--white);}
+.faculty-role{font-size:0.74rem;color:var(--muted2);margin-top:3px;}
+.faculty-exp{
+  font-size:0.72rem;color:var(--p3);margin-top:5px;font-weight:600;
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(108,62,244,0.12);border:1px solid rgba(108,62,244,0.2);
+  padding:2px 8px;border-radius:6px;
+}
+.faculty-bio{font-size:0.8rem;color:var(--muted2);margin-top:10px;line-height:1.6;}
+
+/* ══ FAQ ══ */
+.faq-item{
+  background:var(--surface2);border-radius:12px;
+  border:1px solid var(--border);margin-bottom:8px;overflow:hidden;
+  transition:border-color 0.2s;
+}
+.faq-item:hover{border-color:var(--border2);}
+.faq-question{
+  width:100%;padding:14px 16px;text-align:left;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.85rem;font-weight:600;color:var(--white);
+  background:transparent;gap:10px;
+}
+.faq-question svg{flex-shrink:0;transition:transform 0.2s;color:var(--muted2);}
+.faq-question.open{color:var(--p3);}
+.faq-question.open svg{transform:rotate(180deg);color:var(--p3);}
+.faq-answer{display:none;padding:0 16px 14px;font-size:0.82rem;color:var(--muted2);line-height:1.7;}
+.faq-answer.open{display:block;}
+
+/* ══ Timetable ══ */
+.tt-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:10px;margin-bottom:8px;
+  transition:border-color 0.2s;
+}
+.tt-row:hover{border-color:var(--border2);}
+.tt-topic{font-size:0.85rem;font-weight:600;color:var(--white);}
+.tt-time{
+  font-size:0.75rem;color:var(--p3);font-weight:600;
+  background:rgba(108,62,244,0.12);border:1px solid rgba(108,62,244,0.2);
+  padding:3px 8px;border-radius:6px;
+}
+
+/* ══ Overview sections / heading ══ */
+.overview-h{
+  display:flex;align-items:center;gap:8px;
+  font-size:0.95rem;font-weight:800;color:var(--white);margin-bottom:14px;
+}
+.overview-h-icon{
+  width:28px;height:28px;border-radius:7px;flex-shrink:0;
+  background:rgba(108,62,244,0.15);border:1px solid rgba(108,62,244,0.2);
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ══ PDF Row ══ */
+.pdf-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;background:var(--surface3);
+  border:1px solid var(--border);border-radius:10px;margin-bottom:6px;gap:10px;
+  transition:border-color 0.2s;
+}
+.pdf-row:hover{border-color:var(--border2);}
+.pdf-row-info{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.pdf-row-name{
+  font-size:0.82rem;font-weight:600;color:var(--white);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ══ Info box ══ */
+.info-box{
+  background:rgba(108,62,244,0.08);border-left:3px solid var(--p1);
+  border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:16px;
+  border:1px solid rgba(108,62,244,0.15);border-left:3px solid var(--p1);
+}
+.info-box p{font-size:0.82rem;color:var(--p3);}
+
+/* ══ Quality Modal ══ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
+  align-items:flex-end;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.modal-sheet{
+  background:var(--surface);width:100%;max-width:440px;
+  border-radius:20px 20px 0 0;padding:24px;
+  border:1px solid var(--border);border-bottom:none;
+  animation:fadeSlideUp 0.25s ease;
+}
+.modal-handle{
+  width:40px;height:4px;border-radius:2px;
+  background:var(--border2);margin:0 auto 16px;
+}
+.modal-title{font-size:1rem;font-weight:800;color:var(--white);margin-bottom:16px;}
+.quality-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;padding:13px 16px;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border);
+  margin-bottom:8px;font-size:0.875rem;font-weight:600;color:var(--white);
+  transition:all 0.15s;
+}
+.quality-btn:hover{background:var(--surface3);border-color:var(--border2);}
+.quality-size{font-size:0.73rem;color:var(--muted2);}
+
+/* ══ Live class card ══ */
+.live-class-card{
+  background:var(--surface2);border-radius:12px;
+  border:1px solid var(--border);overflow:hidden;margin-bottom:12px;
+  transition:border-color 0.2s;
+}
+.live-class-card:hover{border-color:var(--border2);}
+.live-class-head{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  background:var(--surface3);display:flex;align-items:flex-start;gap:10px;
+}
+
+/* ══ Developer Footer ══ */
+.dev-footer{
+  text-align:center;padding:24px 16px 32px;
+  border-top:1px solid var(--border);margin-top:12px;
+}
+.dev-footer-text{
+  font-size:0.72rem;color:var(--muted);letter-spacing:0.5px;
+}
+.dev-footer-name{
+  color:var(--p3);font-weight:700;
+  background:linear-gradient(90deg,var(--p1),var(--p3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+/* ══ Responsive ══ */
+@media(max-width:480px){
+  .hero{padding:32px 14px 40px;}
+  .courses-grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .course-card-body{padding:10px 12px 12px;}
+  .course-card-title{font-size:0.82rem;}
+  .price-current{font-size:0.9rem;}
+  .btn{padding:8px 10px;font-size:0.76rem;}
+  .hero-stats{gap:20px;}
+}
+@media(max-width:360px){
+  .courses-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ HOME PAGE ════════════════════ -->
+<div id="page-home" class="page active">
+  <!-- Header -->
+  <header class="header" id="home-header">
+    <div class="header-inner" id="home-header-inner">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-name">EduBatches</span>
+          <span class="brand-tag">PREMIUM</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="toggleHomeSearch()" title="Search">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="header-inner" id="home-search-row" style="display:none;">
+      <div class="header-search-row">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--muted2)" stroke-width="2" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="home-search-input" class="header-search-input" type="search" placeholder="Search batches, topics…" oninput="filterCourses()" autofocus />
+        <button class="icon-btn" onclick="closeHomeSearch()">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-mesh"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-dot"></div>
+        LIVE &amp; RECORDED COURSES
+      </div>
+      <h1 class="hero-title">Learn Without<br>Limits</h1>
+      <p class="hero-subtitle">Access expert-led batches with live classes, recorded lectures &amp; detailed notes — all in one premium platform.</p>
+
+      <div class="hero-stats" id="hero-stats" style="display:none;">
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="stat-batches">—</div>
+          <div class="hero-stat-label">Batches</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="stat-live">—</div>
+          <div class="hero-stat-label">Live Now</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="stat-enrolled">—</div>
+          <div class="hero-stat-label">Enrolled</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">
+        <div class="section-pill"></div>
+        Our Batches
+      </div>
+      <span class="section-count" id="courses-count"></span>
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="filter-row" id="filter-row">
+      <button class="chip active" onclick="setFilter('all',this)">All Batches</button>
+      <button class="chip" onclick="setFilter('live',this)">🔴 Live</button>
+      <button class="chip" onclick="setFilter('recorded',this)">📹 Recorded</button>
+      <button class="chip" onclick="setFilter('enrolled',this)">✅ Enrolled</button>
+    </div>
+
+    <!-- Grid -->
+    <div id="courses-grid" class="courses-grid"></div>
+  </div>
+
+  <!-- Developer Footer -->
+  <div class="dev-footer">
+    <div class="dev-footer-text">
+      Designed &amp; Developed by <span class="dev-footer-name">Fazal</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ BATCH DETAIL PAGE ════════════════════ -->
+<div id="page-batch" class="page">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <button class="back-btn" onclick="goHome()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        All Batches
+      </button>
+      <span id="batch-header-title" class="batch-header-title"></span>
+    </div>
+  </header>
+
+  <!-- Batch Hero -->
+  <div class="batch-hero" id="batch-hero">
+    <div class="batch-hero-mesh"></div>
+    <div class="batch-hero-inner" id="batch-hero-inner">
+      <div class="loader-center"><div class="dots-loader"><div></div><div></div><div></div></div></div>
+    </div>
+  </div>
+
+  <!-- Tabs Nav -->
+  <nav class="tabs-nav" id="batch-tabs-nav" style="display:none;">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Overview
+    </button>
+    <button class="tab-btn" onclick="switchTab('videos',this)">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      Videos
+    </button>
+    <button class="tab-btn" onclick="switchTab('notes',this)">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Notes
+    </button>
+    <button class="tab-btn" onclick="switchTab('timetable',this)">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Live &amp; Schedule
+    </button>
+  </nav>
+
+  <!-- Tab Panels -->
+  <div class="container" id="batch-tab-content" style="display:none;">
+    <div class="tab-content">
+      <div id="tab-overview" class="tab-panel active"></div>
+      <div id="tab-videos" class="tab-panel"></div>
+      <div id="tab-notes" class="tab-panel"></div>
+      <div id="tab-timetable" class="tab-panel"></div>
+    </div>
+  </div>
+
+  <div class="dev-footer">
+    <div class="dev-footer-text">Designed &amp; Developed by <span class="dev-footer-name">Fazal</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════ QUALITY MODAL ════════════════════ -->
+<div class="modal-overlay" id="quality-modal" onclick="closeQualityModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Select Video Quality</div>
+    <div id="quality-options"></div>
+    <button class="btn btn-outline" style="width:100%;margin-top:4px;" onclick="closeQualityModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════ STATE ══════════════════
+const SW_KEY='swEnrolledCourses';
+let allCourses=[];
+let currentFilter='all';
+let currentBatchId=null;
+let batchData=null;
+let videoTopicSelected=null;
+let notesTopicSelected=null;
+let currentQualityList=[];
+
+function getEnrolled(){try{const v=JSON.parse(localStorage.getItem(SW_KEY)||'[]');return Array.isArray(v)?v:[];}catch{return[];}}
+function saveEnrolled(ids){localStorage.setItem(SW_KEY,JSON.stringify(ids));}
+
+// ══════════════════ ROUTING ══════════════════
+function parseHash(){
+  const h=location.hash.slice(1);
+  if(!h||h==='/')return{page:'home',id:null};
+  const m=h.match(/^\/batch\/(.+)/);
+  return m?{page:'batch',id:m[1]}:{page:'home',id:null};
+}
+function navigate(page,id=null){
+  if(page==='batch')location.hash='/batch/'+id;
+  else location.hash='/';
+}
+function goHome(){navigate('home');}
+
+window.addEventListener('hashchange',handleRoute);
+window.addEventListener('DOMContentLoaded',()=>{initHome();handleRoute();});
+
+function handleRoute(){
+  const{page,id}=parseHash();
+  document.getElementById('page-home').classList.toggle('active',page==='home');
+  document.getElementById('page-batch').classList.toggle('active',page==='batch');
+  if(page==='batch'&&id)loadBatch(id);
+}
+
+// ══════════════════ HOME ══════════════════
+function toggleHomeSearch(){
+  document.getElementById('home-header-inner').style.display='none';
+  document.getElementById('home-search-row').style.display='flex';
+  setTimeout(()=>document.getElementById('home-search-input').focus(),50);
+}
+function closeHomeSearch(){
+  document.getElementById('home-header-inner').style.display='flex';
+  document.getElementById('home-search-row').style.display='none';
+  document.getElementById('home-search-input').value='';
+  filterCourses();
+}
+
+async function initHome(){
+  renderCoursesGrid('<div class="loader-center"><div class="dots-loader"><div></div><div></div><div></div></div></div>');
+  try{
+    const res=await fetch('https://backend.multistreaming.site/api/courses/');
+    if(!res.ok)throw new Error('Failed to fetch courses');
+    const j=await res.json();
+    if(j.state!==200)throw new Error(j.message||'Error loading courses');
+    allCourses=(j.data||[]).sort((a,b)=>(a.priority??999)-(b.priority??999));
+    updateHeroStats();
+    filterCourses();
+  }catch(e){
+    renderCoursesGrid(`<div class="error-state">
+      <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="var(--red)" stroke-width="1.5">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <h3>Failed to Load</h3><p>${e.message}</p>
+    </div>`);
+  }
+}
+
+function updateHeroStats(){
+  const enrolled=getEnrolled();
+  const live=allCourses.filter(c=>c.isLive&&c.status==='active').length;
+  document.getElementById('stat-batches').textContent=allCourses.length;
+  document.getElementById('stat-live').textContent=live;
+  document.getElementById('stat-enrolled').textContent=enrolled.length;
+  document.getElementById('hero-stats').style.display='flex';
+}
+
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  filterCourses();
+}
+
+function filterCourses(){
+  const q=(document.getElementById('home-search-input').value||'').toLowerCase();
+  const enrolled=getEnrolled();
+  let list=allCourses;
+  if(q)list=list.filter(c=>c.title.toLowerCase().includes(q)||((c.short_description||'').toLowerCase().includes(q)));
+  if(currentFilter==='live')list=list.filter(c=>c.isLive&&c.status==='active');
+  else if(currentFilter==='recorded')list=list.filter(c=>c.isRecorded);
+  else if(currentFilter==='enrolled')list=list.filter(c=>enrolled.includes(c.id));
+  document.getElementById('courses-count').textContent=list.length+' batch'+(list.length!==1?'es':'');
+  if(list.length===0){
+    renderCoursesGrid('<div class="empty-state"><div class="empty-icon">🔍</div><h3>No batches found</h3><p>Try a different filter or search.</p></div>');
+    return;
+  }
+  renderCoursesGrid(list.map(renderCourseCard).join(''));
+}
+
+function getThumbnail(c){
+  return c.banner||c.bannerSquare||'https://placehold.co/400x225/6c3ef4/white?text=Course';
+}
+
+function renderCourseCard(c){
+  const enrolled=getEnrolled().includes(c.id);
+  const disc=c.price&&c.price>c.discountPrice?Math.round((1-c.discountPrice/c.price)*100):0;
+
+  let leftBadge='';
+  if(c.status==='inactive')leftBadge='<span class="badge badge-inactive">Inactive</span>';
+  else if(c.isLive)leftBadge='<span class="badge badge-live"><span class="dot"></span>Live</span>';
+  else if(c.isRecorded)leftBadge='<span class="badge badge-recorded">📹 Recorded</span>';
+
+  const rightBadge=enrolled?'<span class="badge badge-enrolled">✓ Enrolled</span>':'';
+  const enrollBtn=enrolled
+    ?`<button class="btn btn-danger" onclick="event.stopPropagation();unenroll('${c.id}')">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Unenroll
+      </button>`
+    :`<button class="btn btn-outline" onclick="event.stopPropagation();enroll('${c.id}')">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Enroll
+      </button>`;
+
+  const discTag=disc>0?`<span class="price-discount">${disc}% off</span>`:'';
+  const origTag=c.price&&c.price>c.discountPrice?`<span class="price-original">₹${c.price}</span>`:'';
+  const metaLive=c.isLive?'<span class="course-meta-tag">🔴 Live</span>':'';
+  const metaRec=c.isRecorded?'<span class="course-meta-tag">📹 Recorded</span>':'';
+  const metaVal=c.validity?`<span class="course-meta-tag">⏳ ${c.validity}</span>`:'';
+
+  return `
+  <div class="course-card page-enter" onclick="navigate('batch','${c.id}')">
+    <div class="course-card-thumb">
+      <img class="course-card-img" src="${getThumbnail(c)}" alt="${esc(c.title)}" loading="lazy" onerror="this.src='https://placehold.co/400x225/6c3ef4/white?text=Course'" />
+      <div class="course-card-overlay"></div>
+      <div class="course-card-badges">${leftBadge}${rightBadge}</div>
+    </div>
+    <div class="course-card-body">
+      <div class="course-card-title">${esc(c.title)}</div>
+      ${c.short_description?`<div class="course-card-desc">${esc(c.short_description)}</div>`:''}
+      <div class="course-card-price">
+        <span class="price-current">₹${c.discountPrice}</span>
+        ${origTag}${discTag}
+      </div>
+      <div class="course-card-meta">${metaLive}${metaRec}${metaVal}</div>
+      <div class="course-card-divider"></div>
+      <div class="course-card-actions">
+        <button class="btn btn-primary" onclick="event.stopPropagation();navigate('batch','${c.id}')">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Study
+        </button>
+        ${enrollBtn}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCoursesGrid(html){document.getElementById('courses-grid').innerHTML=html;}
+
+function enroll(id){
+  const ids=[...getEnrolled(),id];
+  saveEnrolled(ids);
+  const c=allCourses.find(x=>x.id===id);
+  showToast('Enrolled in '+(c?c.title:'batch')+'! 🎉','success');
+  filterCourses();updateHeroStats();
+}
+function unenroll(id){
+  saveEnrolled(getEnrolled().filter(x=>x!==id));
+  const c=allCourses.find(x=>x.id===id);
+  showToast('Unenrolled from '+(c?c.title:'batch'),'error');
+  filterCourses();updateHeroStats();
+}
+
+// ══════════════════ BATCH DETAIL ══════════════════
+async function loadBatch(id){
+  if(currentBatchId===id&&batchData)return;
+  currentBatchId=id;batchData=null;
+  videoTopicSelected=null;notesTopicSelected=null;
+  document.getElementById('batch-tabs-nav').style.display='none';
+  document.getElementById('batch-tab-content').style.display='none';
+  document.getElementById('batch-header-title').textContent='';
+  document.getElementById('batch-hero-inner').innerHTML='<div class="loader-center"><div class="dots-loader"><div></div><div></div><div></div></div></div>';
+  try{
+    const res=await fetch(`https://backend.multistreaming.site/api/courses/${id}`);
+    if(!res.ok)throw new Error('Failed to load batch');
+    const j=await res.json();
+    if(j.state!==200)throw new Error(j.message||'Error');
+    batchData=j.data;
+    renderBatchHero(batchData,id);
+    renderBatchOverview(batchData);
+    document.getElementById('tab-videos').innerHTML='<div id="videos-inner"></div>';
+    document.getElementById('tab-notes').innerHTML='<div id="notes-inner"></div>';
+    renderTimetabTab(batchData);
+    document.getElementById('batch-tabs-nav').style.display='flex';
+    document.getElementById('batch-tab-content').style.display='block';
+    switchTab('overview',document.querySelector('.tab-btn'));
+  }catch(e){
+    document.getElementById('batch-hero-inner').innerHTML=`<div class="error-state" style="padding:40px 0;">
+      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="var(--red)" stroke-width="1.5">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+      </svg>
+      <p>${e.message}</p>
+    </div>`;
+  }
+}
+
+function renderBatchHero(b,id){
+  const enrolled=getEnrolled().includes(id);
+  const disc=b.price&&b.price>b.discountPrice?Math.round((1-b.discountPrice/b.price)*100):0;
+  const img=b.banner||'https://placehold.co/540x304/6c3ef4/white?text=Course';
+  document.getElementById('batch-header-title').textContent=b.title;
+  document.getElementById('batch-hero-inner').innerHTML=`
+    <img class="batch-hero-thumb" src="${esc(img)}" alt="${esc(b.title)}" onerror="this.src='https://placehold.co/540x304/6c3ef4/white?text=Course'" />
+    <h1 class="batch-hero-title">${esc(b.title)}</h1>
+    <div class="batch-hero-price">
+      <span class="batch-price-big">₹${b.discountPrice}</span>
+      ${b.price&&b.price>b.discountPrice?`<span class="batch-price-orig">₹${b.price}</span><span class="badge badge-green">${disc}% off</span>`:''}
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+      ${b.isLive?'<span class="badge badge-live"><span class="dot"></span>Live Course</span>':''}
+      ${b.isRecorded?'<span class="badge badge-recorded">📹 Recorded</span>':''}
+      ${b.validity?`<span class="badge badge-primary">⏳ ${esc(b.validity)}</span>`:''}
+      ${enrolled?'<span class="badge badge-enrolled">✓ Enrolled</span>':''}
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      ${enrolled
+        ?`<button class="btn btn-danger" style="flex:unset;padding:10px 20px;" onclick="unenrollBatch('${currentBatchId}')">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            Unenroll
+          </button>`
+        :`<button class="btn btn-primary" style="flex:unset;padding:10px 24px;background:white;color:var(--p1);" onclick="enrollBatch('${currentBatchId}')">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--p1)" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Enroll Now
+          </button>`}
+    </div>
+  `;
+}
+
+function enrollBatch(id){
+  saveEnrolled([...getEnrolled(),id]);
+  renderBatchHero(batchData,id);
+  updateHeroStats();
+  showToast('Enrolled successfully! 🎉','success');
+}
+function unenrollBatch(id){
+  saveEnrolled(getEnrolled().filter(x=>x!==id));
+  renderBatchHero(batchData,id);
+  updateHeroStats();
+  showToast('Unenrolled','error');
+}
+
+// ══ Overview Tab ══
+function renderBatchOverview(b){
+  let html='<div class="page-enter">';
+
+  if(b.description&&b.description.length>0){
+    html+=`<div class="overview-section">
+      <div class="overview-h">
+        <div class="overview-h-icon"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--p3)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+        Course Description
+      </div>
+      <ul>${b.description.map(d=>`<li><div class="li-icon"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="var(--p3)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>${esc(d)}</li>`).join('')}</ul>
+    </div>`;
+  }
+
+  if(b.courseHighlights&&b.courseHighlights.length>0){
+    html+=`<div class="overview-section">
+      <div class="overview-h">
+        <div class="overview-h-icon"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--p3)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        Course Highlights
+      </div>
+      <ul>${b.courseHighlights.map(h=>`<li><div class="li-icon"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="var(--p3)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>${esc(h)}</li>`).join('')}</ul>
+    </div>`;
+  }
+
+  if(b.facultyDetails){
+    const f=b.facultyDetails;
+    html+=`<div class="overview-section">
+      <div class="overview-h">
+        <div class="overview-h-icon"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--p3)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        Faculty
+      </div>
+      <div class="faculty-card">
+        <img class="faculty-img" src="${esc(f.imageUrl||'')}" alt="${esc(f.name)}" onerror="this.src='https://placehold.co/72x72/6c3ef4/white?text=${esc(f.name?f.name[0]:'?')}'" />
+        <div style="flex:1;">
+          <div class="faculty-name">${esc(f.name)}</div>
+          <div class="faculty-role">${esc(f.designation||'')}</div>
+          ${f.experience||f.reach?`<div class="faculty-exp"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>${esc(f.experience||'')}${f.reach?' · '+esc(f.reach):''}</div>`:''}
+          ${f.bio?`<div class="faculty-bio">${esc(f.bio)}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if(b.faqs&&b.faqs.length>0){
+    html+=`<div class="overview-section">
+      <div class="overview-h">
+        <div class="overview-h-icon"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--p3)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+        FAQs
+      </div>
+      ${b.faqs.map(f=>`
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">${esc(f.question)}
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">${esc(f.answer)}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  html+='</div>';
+  document.getElementById('tab-overview').innerHTML=html;
+}
+
+function toggleFaq(btn){
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// ══ Videos Tab ══
+async function loadVideosTab(){
+  const el=document.getElementById('videos-inner');
+  if(videoTopicSelected){renderVideoTopic(videoTopicSelected);return;}
+  el.innerHTML='<div class="loader-center"><div class="dots-loader"><div></div><div></div><div></div></div></div>';
+  try{
+    const res=await fetch(`https://backend.multistreaming.site/api/courses/${currentBatchId}/classes?populate=full`);
+    const j=await res.json();
+    const topics=(j.state===200&&j.data?.classes)?j.data.classes:[];
+    const valid=topics.filter(t=>(t.classes||[]).length>0);
+    if(valid.length===0){el.innerHTML='<div class="empty-state"><div class="empty-icon">🎬</div><h3>No Videos Yet</h3><p>Videos will be uploaded soon.</p></div>';return;}
+    el.innerHTML=valid.map((t,i)=>`
+      <div class="topic-card" onclick="selectVideoTopic(${i})">
+        <div class="topic-icon topic-icon-video">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--p2)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </div>
+        <div class="topic-info">
+          <div class="topic-name">${esc(t.topicName)}</div>
+          <div class="topic-sub">${(t.classes||[]).length} lecture${(t.classes||[]).length!==1?'s':''}</div>
+        </div>
+        <div class="topic-arrow">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>`).join('');
+    el._topics=valid;
+  }catch(e){el.innerHTML=`<div class="error-state"><p>${e.message}</p></div>`;}
+}
+
+function selectVideoTopic(idx){
+  const el=document.getElementById('videos-inner');
+  videoTopicSelected=el._topics[idx];
+  renderVideoTopic(videoTopicSelected);
+}
+function renderVideoTopic(topic){
+  const items=topic.classes||[];
+  document.getElementById('videos-inner').innerHTML=`
+    <button class="btn btn-ghost" style="margin-bottom:14px;" onclick="backToVideoTopics()">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+      Back to Topics
+    </button>
+    <div style="font-size:0.95rem;font-weight:800;color:var(--white);margin-bottom:16px;">${esc(topic.topicName)}</div>
+    ${items.map(cls=>renderClassCard(cls)).join('')}
+  `;
+}
+function backToVideoTopics(){videoTopicSelected=null;loadVideosTab();}
+
+function renderClassCard(cls){
+  const isLive=cls.isLive&&cls.streamStatus!=='ended';
+  const isUpcoming=cls.startDate&&new Date(cls.startDate)>new Date()&&!isLive;
+  const isCompleted=cls.streamStatus==='ended'||(!isLive&&!isUpcoming);
+  const hasRec=cls.mp4Recordings&&cls.mp4Recordings.length>0;
+  const hasNotes=cls.classPdf&&cls.classPdf.length>0;
+
+  const statusBadge=isLive
+    ?'<span class="badge badge-live"><span class="dot"></span>LIVE</span>'
+    :isUpcoming?'<span class="badge badge-upcoming">Upcoming</span>'
+    :'<span class="badge badge-completed">Completed</span>';
+
+  const dateStr=cls.startDate?`<span class="class-time">
+    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    ${new Date(cls.startDate).toLocaleDateString()} · ${new Date(cls.startDate).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+  </span>`:'';
+
+  let videoSection='';
+  if(isLive){
+    videoSection=`<button class="btn btn-live" style="width:100%;" onclick="openLink('${esc(cls.class_link||'')}')">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49"/></svg>
+      Join Live
+    </button>`;
+  } else if(isCompleted&&hasRec){
+    if(cls.mp4Recordings.length>1){
+      videoSection='<div style="display:flex;flex-wrap:wrap;gap:6px;">'+
+        cls.mp4Recordings.map(r=>`<button class="btn btn-primary btn-sm" onclick="openLink('${esc(r.url)}')">▶ ${esc(r.quality)}</button>`).join('')+
+      '</div>';
+    } else {
+      videoSection=`<button class="btn btn-primary" style="width:100%;" onclick="openLink('${esc(cls.mp4Recordings[0].url)}')">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Watch Recording
+      </button>`;
+    }
+  } else if(isUpcoming){
+    videoSection='<button class="btn btn-disabled" style="width:100%;" disabled>⏳ Class Starting Soon</button>';
+  } else {
+    videoSection=`<button class="btn btn-outline" style="width:100%;" onclick="openLink('${esc(cls.class_link||'')}')">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Play Video
+    </button>`;
+  }
+
+  const notesSection=hasNotes
+    ?cls.classPdf.map(pdf=>`
+      <div class="pdf-row">
+        <div class="pdf-row-info">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="var(--sky)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="pdf-row-name">${esc(pdf.name)}</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openLink('${esc(pdf.url)}')">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          View
+        </button>
+      </div>`).join('')
+    :'<p style="font-size:0.78rem;color:var(--muted);padding:6px 0;">No notes for this lecture.</p>';
+
+  const cardId='card-'+Math.random().toString(36).slice(2);
+  return `
+  <div class="class-card">
+    <div class="class-card-head">
+      <div class="class-icon">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="var(--p2)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div class="class-title">${esc(cls.title)}</div>
+        ${cls.teacherName?`<div class="class-teacher">By ${esc(cls.teacherName)}</div>`:''}
+        ${dateStr}
+      </div>
+      ${statusBadge}
+    </div>
+    <div class="class-card-tabs">
+      <button class="class-tab-btn active" onclick="switchClassTab(this,'${cardId}','video')">
+        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:4px;"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Lecture
+      </button>
+      <button class="class-tab-btn" onclick="switchClassTab(this,'${cardId}','notes')" ${!hasNotes?'disabled':''}>
+        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Notes${hasNotes?` (${cls.classPdf.length})`:' (0)'}
+      </button>
+    </div>
+    <div id="${cardId}-video" class="class-tab-panel active">${videoSection}</div>
+    <div id="${cardId}-notes" class="class-tab-panel">${notesSection}</div>
+  </div>`;
+}
+
+function switchClassTab(btn,cardId,tab){
+  const card=btn.closest('.class-card');
+  card.querySelectorAll('.class-tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  card.querySelectorAll('.class-tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(cardId+'-'+tab).classList.add('active');
+}
+
+// ══ Notes Tab ══
+async function loadNotesTab(){
+  const el=document.getElementById('notes-inner');
+  if(notesTopicSelected){renderNotesTopic(notesTopicSelected);return;}
+  el.innerHTML='<div class="loader-center"><div class="dots-loader"><div></div><div></div><div></div></div></div>';
+  try{
+    const res=await fetch(`https://gdgoenkaratia.com/api/courses/${currentBatchId}/pdfs?groupBy=topic`);
+    const j=await res.json();
+    const topics=(j.state===200&&j.data?.topics)?j.data.topics.filter(t=>t.pdfs&&t.pdfs.length>0):[];
+    if(topics.length===0){el.innerHTML='<div class="empty-state"><div class="empty-icon">📄</div><h3>No Notes Yet</h3><p>Notes will be uploaded soon.</p></div>';return;}
+    el.innerHTML=topics.map((t,i)=>`
+      <div class="topic-card" onclick="selectNotesTopic(${i})">
+        <div class="topic-icon topic-icon-notes">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#10b981" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="topic-info">
+          <div class="topic-name">${esc(t.topicName)}</div>
+          <div class="topic-sub">${t.pdfs.length} note${t.pdfs.length!==1?'s':''}</div>
+        </div>
+        <div class="topic-arrow">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>`).join('');
+    el._topics=topics;
+  }catch(e){el.innerHTML=`<div class="error-state"><p>${e.message}</p></div>`;}
+}
+
+function selectNotesTopic(idx){
+  const el=document.getElementById('notes-inner');
+  notesTopicSelected=el._topics[idx];
+  renderNotesTopic(notesTopicSelected);
+}
+function renderNotesTopic(topic){
+  document.getElementById('notes-inner').innerHTML=`
+    <button class="btn btn-ghost" style="margin-bottom:14px;" onclick="backToNotesTopics()">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+      Back to Topics
+    </button>
+    <div style="font-size:0.95rem;font-weight:800;color:var(--white);margin-bottom:16px;">${esc(topic.topicName)}</div>
+    ${topic.pdfs.map(pdf=>`
+      <div class="pdf-row">
+        <div class="pdf-row-info">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="var(--sky)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div>
+            <div class="pdf-row-name">${esc(pdf.title)}</div>
+            ${pdf.teacherName?`<div style="font-size:0.68rem;color:var(--muted);">By ${esc(pdf.teacherName)}</div>`:''}
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openLink('${esc(pdf.uploadPdf)}')">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          View
+        </button>
+      </div>`).join('')}
+  `;
+}
+function backToNotesTopics(){notesTopicSelected=null;loadNotesTab();}
+
+// ══ Timetable & Live Tab ══
+async function renderTimetabTab(b){
+  const el=document.getElementById('tab-timetable');
+  const timeTable=b.timeTable||[];
+  el.innerHTML='<div class="loader-center"><div class="dots-loader"><div></div><div></div><div></div></div></div>';
+
+  let liveHtml=`<div style="text-align:center;padding:24px 0;">
+    <div style="font-size:2rem;opacity:0.3;margin-bottom:8px;">📡</div>
+    <p style="font-size:0.84rem;color:var(--muted);">No classes scheduled for today.</p>
+  </div>`;
+
+  try{
+    const res=await fetch(`https://gdgoenkaratia.com/api/courses/${currentBatchId}/todays-classes`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Origin':'https://www.selectionway.com'},
+      body:JSON.stringify({}),cache:'no-store'
+    });
+    if(res.ok){
+      const j=await res.json();
+      const classes=j?.data?.classes||[];
+      if(classes.length>0){
+        const sorted=[...classes].sort((a,b)=>{
+          const o={LIVE:0,Upcoming:1,Completed:2};
+          return(o[getLiveStatus(a)]??2)-(o[getLiveStatus(b)]??2);
+        });
+        liveHtml=sorted.map(c=>renderLiveClassCard(c)).join('');
+      }
+    }
+  }catch(e){}
+
+  const ttHtml=timeTable.length>0
+    ?timeTable.map(t=>`<div class="tt-row"><span class="tt-topic">${esc(t.topic)}</span><span class="tt-time">${esc(t.time)}</span></div>`).join('')
+    :`<div style="text-align:center;padding:24px 0;"><p style="font-size:0.84rem;color:var(--muted);">Timetable will be updated soon.</p></div>`;
+
+  el.innerHTML=`
+    <div class="overview-section">
+      <div class="overview-h">
+        <div class="overview-h-icon"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--red)" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.95A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.57 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></div>
+        Today's Classes
+      </div>
+      ${liveHtml}
+    </div>
+    <div class="overview-section">
+      <div class="overview-h">
+        <div class="overview-h-icon"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--p3)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        Weekly Schedule
+      </div>
+      ${ttHtml}
+    </div>`;
+}
+
+function getLiveStatus(cls){
+  if(cls.isLive&&cls.streamStatus!=='ended')return'LIVE';
+  if(cls.streamStatus==='ended')return'Completed';
+  if(cls.startDate&&new Date(cls.startDate)>new Date())return'Upcoming';
+  return'Completed';
+}
+
+function renderLiveClassCard(cls){
+  const status=getLiveStatus(cls);
+  const hasRec=cls.mp4Recordings&&cls.mp4Recordings.length>0;
+  const badge=status==='LIVE'
+    ?'<span class="badge badge-live"><span class="dot"></span>LIVE</span>'
+    :status==='Upcoming'
+    ?'<span class="badge badge-upcoming">Upcoming</span>'
+    :'<span class="badge badge-completed">Completed</span>';
+
+  let actionBtn='';
+  if(status==='LIVE'&&cls.class_link){
+    actionBtn=`<button class="btn btn-live" style="width:100%;margin-top:10px;" onclick="openLink('${esc(cls.class_link)}')">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49"/></svg>
+      Join Live
+    </button>`;
+  } else if(status==='Completed'&&hasRec){
+    if(cls.mp4Recordings.length>1){
+      actionBtn='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">'+
+        cls.mp4Recordings.map(r=>`<button class="btn btn-primary btn-sm" onclick="openLink('${esc(r.url)}')">▶ ${esc(r.quality)}</button>`).join('')+
+      '</div>';
+    }else{
+      actionBtn=`<button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="openLink('${esc(cls.mp4Recordings[0].url)}')">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Watch Recording
+      </button>`;
+    }
+  }else if(status==='Upcoming'){
+    actionBtn=`<button class="btn btn-disabled" style="width:100%;margin-top:10px;" disabled>⏳ Upcoming</button>`;
+  }
+
+  return `
+  <div class="live-class-card">
+    <div class="live-class-head">
+      <div class="class-icon">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="var(--p2)" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.95A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.57 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div class="class-title">${esc(cls.title)}</div>
+        <div class="class-time">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${new Date(cls.startDate).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+          ${cls.endDate?` – ${new Date(cls.endDate).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`:'' }
+        </div>
+      </div>
+      ${badge}
+    </div>
+    ${actionBtn?`<div style="padding:12px 16px;">${actionBtn}</div>`:''}
+  </div>`;
+}
+
+// ══ Tab Switch ══
+function switchTab(name,clickedBtn){
+  document.querySelectorAll('#batch-tabs-nav .tab-btn').forEach(b=>b.classList.remove('active'));
+  if(clickedBtn)clickedBtn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  const panel=document.getElementById('tab-'+name);
+  if(panel)panel.classList.add('active');
+  if(name==='videos')loadVideosTab();
+  if(name==='notes')loadNotesTab();
+}
+
+// ══ Quality Modal ══
+function showQualityPicker(recs){
+  currentQualityList=recs;
+  document.getElementById('quality-options').innerHTML=recs.map(r=>`
+    <button class="quality-btn" onclick="pickQuality('${esc(r.url)}')">
+      <span>${esc(r.quality)}</span>
+      <span class="quality-size">${r.size.toFixed(0)} MB</span>
+    </button>`).join('');
+  document.getElementById('quality-modal').classList.add('open');
+}
+function pickQuality(url){closeQualityModal();openLink(url);}
+function closeQualityModal(e){
+  if(e&&e.target!==document.getElementById('quality-modal'))return;
+  document.getElementById('quality-modal').classList.remove('open');
+}
+
+// ══ Helpers ══
+function openLink(url){if(url)window.open(url,'_blank','noopener,noreferrer');}
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+
+// ══ Toast ══
+function showToast(msg,type='success'){
+  let t=document.getElementById('toast');
+  if(!t){
+    t=document.createElement('div');t.id='toast';
+    t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(0);z-index:400;padding:11px 22px;border-radius:12px;font-size:0.84rem;font-weight:700;color:white;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:opacity 0.3s,transform 0.3s;pointer-events:none;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.background=type==='success'
+    ?'linear-gradient(135deg,#10b981,#059669)'
+    :'linear-gradient(135deg,#ef4444,#dc2626)';
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.style.opacity='0',2800);
+}
+</script>
+</body>
+</html>
